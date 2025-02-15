@@ -23,146 +23,60 @@ In modern e-commerce, multiple shopping applications require seamless and secure
 
 ---
 
-## Code Implementation
-
-### **1. Install Dependencies**
-```sh
-pip install django djangorestframework mysqlclient requests
+## Installation
+### **1. Clone the Repository:**
+```
+git clone https://github.com/yourusername/easypay-hub.git
+cd easypay-hub
 ```
 
-### **2. Create Django Project & App**
-```sh
-django-admin startproject easypayhub
-cd easypayhub
-django-admin startapp payments
+### **2. Set Up a Virtual Environment:**
+```
+python3 -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+
 ```
 
-### **3. Configure MySQL Database** (settings.py)
+### **3. Install Dependencies:** 
+```
+pip install -r requirements.txt
+
+```
+
+### **4. Apply Migrations:**
 ```python
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'easypayhub_db',
-        'USER': 'root',
-        'PASSWORD': 'yourpassword',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-```
-
-### **4. Models (models.py)**
-```python
-import uuid
-from django.db import models
-from django.utils.timezone import now
-
-class Transaction(models.Model):
-    transaction_id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
-    product_name = models.CharField(max_length=255)
-    time = models.DateTimeField(default=now)
-    status = models.CharField(max_length=50, choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Failed', 'Failed')])
-    product_cost = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.product_name} - {self.status}"
-
-class Merchant(models.Model):
-    mid = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50, choices=[('Active', 'Active'), ('Inactive', 'Inactive')])
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-    def __str__(self):
-        return self.name
-```
-
-### **5. Serializers (serializers.py)**
-```python
-from rest_framework import serializers
-from .models import Transaction, Merchant
-
-class TransactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Transaction
-        fields = '__all__'
-
-class MerchantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Merchant
-        fields = '__all__'
-```
-
-### **6. Views with REST API Communication (views.py)**
-```python
-import requests
-from rest_framework import viewsets, status
-from rest_framework.response import Response
-from .models import Transaction, Merchant
-from .serializers import TransactionSerializer, MerchantSerializer
-
-class TransactionViewSet(viewsets.ModelViewSet):
-    queryset = Transaction.objects.all()
-    serializer_class = TransactionSerializer
-
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        transaction_data = response.data
-        
-        # Notify external shopping app (Example API call)
-        external_api_url = "https://shoppingapp.com/api/notify_transaction"
-        requests.post(external_api_url, json=transaction_data)
-        
-        return response
-
-class MerchantViewSet(viewsets.ModelViewSet):
-    queryset = Merchant.objects.all()
-    serializer_class = MerchantSerializer
-```
-
-### **7. URLs (urls.py)**
-```python
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import TransactionViewSet, MerchantViewSet
-
-router = DefaultRouter()
-router.register(r'transactions', TransactionViewSet)
-router.register(r'merchants', MerchantViewSet)
-
-urlpatterns = [
-    path('api/', include(router.urls)),
-]
-```
-
-### **8. Register App in Django (settings.py)**
-```python
-INSTALLED_APPS = [
-    ...
-    'rest_framework',
-    'payments',
-]
-```
-
-### **9. Migrate Database**
-```sh
 python manage.py makemigrations
 python manage.py migrate
+
 ```
 
-### **10. Run Development Server**
-```sh
+### **5. Run the Development Server:**
+```python
 python manage.py runserver
+
 ```
 
-## Future Improvements
-1. **Security Enhancements** – Implement JWT authentication and encryption for sensitive data.
-2. **Webhook Integration** – Notify merchants in real time about transaction status.
-3. **Multi-Currency Support** – Enable payments in different currencies.
-4. **Fraud Detection System** – Use AI/ML to detect fraudulent transactions.
-5. **Admin Dashboard** – Provide analytics and transaction insights.
-6. **Payment Gateway Support** – Integrate third-party gateways like Stripe, Razorpay, and PayPal.
-7. **Subscription & EMI Payments** – Allow installment-based payments for merchants.
 
-Now, the **EasyPay HUB** API can communicate with shopping applications via REST API, notifying them about transaction updates
+## API Endpoints
+1. **Merchant Endpoints:** – GET /merchants/: List all merchants.
+ - POST /merchants/: Create a new merchant.
+ - GET /merchants/{id}/: Retrieve a specific merchant.
+ - PUT /merchants/{id}/: Update a merchant's details.
+ - DELETE /merchants/{id}/: Delete a merchant.
+
+2. **Transaction Endpoints:** – GET /transactions/: List all transactions.
+ - POST /transactions/: Create a new transaction.
+ - GET /transactions/{id}/: Retrieve a specific transaction.
+ - PUT /transactions/{id}/: Update a transaction's details.
+ - DELETE /transactions/{id}/: Delete a transaction.
+4. **Transaction Status Endpoint:t** – GET /transaction-status/{transaction_id}/: Retrieve the status of a specific transaction.
+
+## Testing with Postman
+--To ensure the API functions as expected, you can use Postman, a popular API testing tool.
+1. **Install Postman:**  Download and install Postman from the official website.
+2. **Import the API Collection:** - Open Postman and click on the "Import" button.
+   - Import the provided Postman collection file (EasyPay_HUB.postman_collection.json) located in the repository.
+3. **Set Up Environment:** - Create a new environment in Postman with the following variable:
+ - base_url: Set this to http://127.0.0.1:8000/ or your deployed API URL.
+4. **Testing Endpoints:** -Use the imported collection to test various endpoints.
+ - Ensure to provide necessary headers and body data as required by each endpoint.
