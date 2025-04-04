@@ -1,10 +1,10 @@
 # EasyPay Hub API Documentation
 
-Introduction
+## Introduction
 
 EasyPay Hub is a Django-based RESTful API that acts as a third-party payment gateway for online transactions. It enables merchants to securely process payments, verify transactions, and update payment statuses in real time. The system ensures seamless integration with shopping applications, providing a robust, scalable, and efficient payment processing solution.
 
-Why Use EasyPay Hub?
+## Why Use EasyPay Hub?
 
 Seamless Payment Integration: Helps businesses process online transactions securely and efficiently.
 
@@ -18,7 +18,7 @@ Merchant & Transaction Management: Provides structured data storage and tracking
 
 Customizable & Extendable: Can be enhanced with additional features like fraud detection, multiple payment options, and analytics.
 
-Technologies Used
+## Technologies Used
 
 Programming Language: Python
 
@@ -34,7 +34,7 @@ Version Control: Git, GitHub
 
 Deployment: AWS (optional for cloud hosting)
 
-Challenges Overcome by EasyPay Hub
+## Challenges Overcome by EasyPay Hub
 
 Traditional Payment Processing Complexity: Simplifies online payment handling for merchants.
 
@@ -46,7 +46,7 @@ Scalability Issues: Supports multiple merchants and transactions simultaneously.
 
 High Integration Costs: Offers a cost-effective, open-source payment gateway alternative.
 
-Advantages
+## Advantages
 
 Efficient Payment Processing: Streamlined transaction handling.
 
@@ -60,7 +60,7 @@ Open-Source & Cost-Effective: Avoids expensive third-party payment gateway fees.
 
 Easy Integration: Works seamlessly with existing shopping platforms.
 
-Features
+## Features
 
 Merchant Management
 
@@ -76,11 +76,11 @@ Verify payment status
 
 Update transactions
 
-Secure Authentication
+## Secure Authentication
 
 Username and password-based authentication for API access
 
-Database Storage
+## Database Storage
 
 Merchant Table: Stores merchant and transaction details
 
